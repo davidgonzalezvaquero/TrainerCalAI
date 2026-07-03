@@ -36,9 +36,17 @@ export class PolarAdapter implements PolarPort {
   private redirectUri: string;
 
   constructor() {
-    this.clientId = process.env.POLAR_CLIENT_ID!;
-    this.clientSecret = process.env.POLAR_CLIENT_SECRET!;
-    this.redirectUri = process.env.POLAR_REDIRECT_URI!;
+    this.clientId = process.env.POLAR_CLIENT_ID;
+    this.clientSecret = process.env.POLAR_CLIENT_SECRET;
+    this.redirectUri = process.env.POLAR_REDIRECT_URI;
+
+    if (!this.clientId || !this.clientSecret || !this.redirectUri) {
+      throw new Error('Missing required Polar environment variables: POLAR_CLIENT_ID, POLAR_CLIENT_SECRET, POLAR_REDIRECT_URI');
+    }
+  }
+
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
 
   getAuthorizationUrl(): string {
@@ -83,6 +91,10 @@ export class PolarAdapter implements PolarPort {
       }),
     });
 
+    if (!userResponse.ok) {
+      throw new Error(`Failed to register Polar user: ${userResponse.status}`);
+    }
+
     const userData = await userResponse.json();
     
     return {
@@ -92,8 +104,8 @@ export class PolarAdapter implements PolarPort {
   }
 
   async getActivities(userId: string, accessToken: string, startDate: Date, endDate: Date): Promise<PolarActivity[]> {
-    const start = startDate.toISOString().split('T')[0];
-    const end = endDate.toISOString().split('T')[0];
+    const start = this.formatDate(startDate);
+    const end = this.formatDate(endDate);
     
     const response = await fetch(
       `${POLAR_API_BASE}/users/${userId}/activity-samples/${start}/${end}`,
@@ -124,8 +136,8 @@ export class PolarAdapter implements PolarPort {
   }
 
   async getSleep(userId: string, accessToken: string, startDate: Date, endDate: Date): Promise<PolarSleep[]> {
-    const start = startDate.toISOString().split('T')[0];
-    const end = endDate.toISOString().split('T')[0];
+    const start = this.formatDate(startDate);
+    const end = this.formatDate(endDate);
     
     const response = await fetch(
       `${POLAR_API_BASE}/users/${userId}/sleep/${start}/${end}`,
@@ -155,7 +167,7 @@ export class PolarAdapter implements PolarPort {
   }
 
   async getDailyActivity(userId: string, accessToken: string, date: Date): Promise<PolarDailyActivity> {
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = this.formatDate(date);
     
     const response = await fetch(
       `${POLAR_API_BASE}/users/${userId}/activity-log/${dateStr}`,
