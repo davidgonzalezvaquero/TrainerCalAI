@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 
 interface Workout {
-  name: string;
+  name: string | null;
   date: string;
-  duration: number;
-  volume: number;
+  duration: number | null;
+  volume: number | null;
   exercises: number;
   prs: number;
 }
@@ -15,7 +15,7 @@ export function LyftaWidget() {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchData = () => {
     fetch('/api/lyfta/last-workout')
       .then(res => res.json())
       .then(data => {
@@ -23,6 +23,10 @@ export function LyftaWidget() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   if (loading) {
@@ -47,9 +51,11 @@ export function LyftaWidget() {
       <h3 className="text-sm font-medium text-slate-400 mb-3">LYFTA - ÚLTIMO ENTRENAMIENTO</h3>
       <div className="flex justify-between items-start">
         <div>
-          <div className="font-bold">{workout.name}</div>
+          <div className="font-bold">{workout.name || 'Entrenamiento'}</div>
           <div className="text-sm text-slate-400 mt-1">
-            ⏱️ {workout.duration} min • 🏋️ {workout.volume.toLocaleString()} kg vol. • 📊 {workout.exercises} ejercicios
+            {workout.duration ? `⏱️ ${workout.duration} min • ` : ''}
+            {workout.volume ? `🏋️ ${workout.volume.toLocaleString()} kg vol. • ` : ''}
+            📊 {workout.exercises} ejercicios
           </div>
         </div>
         {workout.prs > 0 && (

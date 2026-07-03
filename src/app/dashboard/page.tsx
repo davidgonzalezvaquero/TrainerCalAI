@@ -9,6 +9,7 @@ import { CalendarWidget } from '@/ui/components/dashboard/calendar-widget';
 export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [syncing, setSyncing] = useState({ polar: false, lyfta: false });
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleSync = async (provider: 'polar' | 'lyfta') => {
     setSyncing(prev => ({ ...prev, [provider]: true }));
@@ -18,6 +19,7 @@ export default function DashboardPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: '00000000-0000-0000-0000-000000000001' }),
       });
+      setRefreshKey(prev => prev + 1);
     } finally {
       setSyncing(prev => ({ ...prev, [provider]: false }));
     }
@@ -59,8 +61,8 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4 mt-6">
-          <PolarWidget />
-          <LyftaWidget />
+          <PolarWidget key={`polar-${refreshKey}`} />
+          <LyftaWidget key={`lyfta-${refreshKey}`} />
         </div>
       </div>
     </div>
