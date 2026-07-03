@@ -1,0 +1,1 @@
+export type FitnessLevel = 'beginner' | 'intermediate' | 'advanced';

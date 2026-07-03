@@ -2,7 +2,7 @@ export interface Meal {
   id: string;
   userId: string;
   date: Date;
-  time: string;
+  time: string; // HH:MM format
   name: string;
   calories: number;
   protein: number;

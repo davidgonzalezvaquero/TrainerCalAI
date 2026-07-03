@@ -22,6 +22,7 @@ export interface PolarSleep {
 }
 
 export interface PolarDailyActivity {
+  id: string;
   userId: string;
   date: Date;
   steps: number;

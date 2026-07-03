@@ -1,3 +1,5 @@
+import { FitnessLevel } from './types';
+
 export interface User {
   id: string;
   email: string;
@@ -11,7 +13,7 @@ export interface Profile {
   bodyFat?: number;
   targetWeight?: number;
   goal: 'lose_weight' | 'maintain' | 'gain_muscle';
-  experienceLevel: 'beginner' | 'intermediate' | 'advanced';
+  experienceLevel: FitnessLevel;
 }
 
 export interface Connection {

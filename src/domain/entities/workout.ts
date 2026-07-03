@@ -20,7 +20,7 @@ export interface Exercise {
 export interface Set {
   reps: number;
   weight: number;
-  rpe?: number;
+  rpe?: number; // 1-10 Rate of Perceived Exertion
   isWarmup?: boolean;
   isDropSet?: boolean;
 }

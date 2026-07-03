@@ -1,3 +1,5 @@
+import { FitnessLevel } from './types';
+
 export interface Routine {
   id: string;
   userId: string;
@@ -5,7 +7,7 @@ export interface Routine {
   createdAt: Date;
   exercises: RoutineExercise[];
   goal: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: FitnessLevel;
   durationWeeks: number;
 }
 
