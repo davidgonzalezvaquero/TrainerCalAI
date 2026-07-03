@@ -205,16 +205,25 @@ export class SupabaseAdapter implements StoragePort {
     
     if (error || !data) return [];
     
-    return data.map(workout => ({
-      id: workout.id,
-      userId: workout.user_id,
-      date: new Date(workout.date),
-      name: workout.name,
-      exercises: JSON.parse(workout.exercises || '[]'),
-      duration: workout.duration,
-      volume: workout.volume,
-      intensity: workout.intensity,
-    }));
+    return data.map(workout => {
+      let exercises = [];
+      try {
+        const parsed = JSON.parse(workout.exercises || '[]');
+        exercises = typeof parsed === 'string' ? JSON.parse(parsed) : parsed;
+      } catch {
+        exercises = [];
+      }
+      return {
+        id: workout.id,
+        userId: workout.user_id,
+        date: new Date(workout.date),
+        name: workout.name,
+        exercises,
+        duration: workout.duration,
+        volume: workout.volume,
+        intensity: workout.intensity,
+      };
+    });
   }
 
   async upsertPersonalRecords(prs: PersonalRecord[]): Promise<void> {
