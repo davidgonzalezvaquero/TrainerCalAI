@@ -62,7 +62,8 @@ CREATE TABLE public.lyfta_workouts (
   duration NUMERIC,
   volume NUMERIC,
   intensity NUMERIC,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, date, name)
 );
 
 -- Personal records
@@ -74,7 +75,8 @@ CREATE TABLE public.lyfta_personal_records (
   weight NUMERIC,
   reps NUMERIC,
   date DATE,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, exercise_id, date)
 );
 
 -- Meals
@@ -92,7 +94,8 @@ CREATE TABLE public.meals (
   analysis_source TEXT CHECK (analysis_source IN ('ai', 'manual')),
   confidence NUMERIC,
   description TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, date, time, name)
 );
 
 -- Routines

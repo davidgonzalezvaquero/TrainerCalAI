@@ -177,6 +177,7 @@ export class SupabaseAdapter implements StoragePort {
       .from('lyfta_workouts')
       .upsert(
         workouts.map(workout => ({
+          id: workout.id,
           user_id: workout.userId,
           date: workout.date.toISOString().split('T')[0],
           name: workout.name,
@@ -225,7 +226,7 @@ export class SupabaseAdapter implements StoragePort {
           reps: pr.reps,
           date: pr.date.toISOString().split('T')[0],
         })),
-        { onConflict: 'id' }
+        { onConflict: 'user_id,exercise_id,date' }
       );
     
     if (error) throw error;
@@ -235,6 +236,7 @@ export class SupabaseAdapter implements StoragePort {
     const { error } = await supabase
       .from('meals')
       .upsert({
+        id: meal.id,
         user_id: meal.userId,
         date: meal.date.toISOString().split('T')[0],
         time: meal.time,
@@ -282,6 +284,7 @@ export class SupabaseAdapter implements StoragePort {
     const { error } = await supabase
       .from('routines')
       .upsert({
+        id: routine.id,
         user_id: routine.userId,
         name: routine.name,
         exercises: JSON.stringify(routine.exercises),
@@ -317,6 +320,7 @@ export class SupabaseAdapter implements StoragePort {
     const { error } = await supabase
       .from('routine_logs')
       .upsert({
+        id: log.id,
         user_id: log.userId,
         routine_id: log.routineId,
         exercise_id: log.exerciseId,
