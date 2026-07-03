@@ -11,8 +11,12 @@ export async function GET() {
     const start = new Date();
     start.setFullYear(start.getFullYear() - 1);
     const end = new Date();
+    console.log('Querying workouts for userId:', userId, 'from', start.toISOString(), 'to', end.toISOString());
     const workouts = await storage.getLyftaWorkouts(userId, start, end);
     console.log('Last workout query returned:', workouts.length, 'workouts');
+    if (workouts.length > 0) {
+      console.log('First workout:', JSON.stringify(workouts[0], null, 2));
+    }
 
     const lastWorkout = workouts[workouts.length - 1];
 
