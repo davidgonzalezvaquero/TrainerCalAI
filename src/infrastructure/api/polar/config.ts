@@ -20,6 +20,6 @@ export function createPolarConfig(overrides?: Partial<PolarConfig>): PolarConfig
     clientSecret,
     redirectUri,
     apiBaseUrl: overrides?.apiBaseUrl ?? 'https://polaraccesslink.com/v3',
-    authBaseUrl: overrides?.authBaseUrl ?? 'https://auth.polar.com',
+    authBaseUrl: overrides?.authBaseUrl ?? 'https://flow.polar.com',
   };
 }
