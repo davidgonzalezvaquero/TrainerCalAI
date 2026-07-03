@@ -46,9 +46,13 @@ export class LyftaAdapter implements LyftaPort {
     }
 
     const data = await response.json();
-    
+
+    if (!data?.workouts || !Array.isArray(data.workouts)) {
+      return [];
+    }
+
     return data.workouts.map((workout: LyftaWorkoutResponse) => ({
-      id: workout.id.toString(),
+      id: (workout.id ?? crypto.randomUUID()).toString(),
       userId: '',
       date: new Date(workout.date),
       name: workout.name,
@@ -83,9 +87,13 @@ export class LyftaAdapter implements LyftaPort {
     }
 
     const data = await response.json();
-    
+
+    if (!data?.exercises || !Array.isArray(data.exercises)) {
+      return [];
+    }
+
     return data.exercises.map((ex: LyftaExerciseResponse) => ({
-      id: ex.id.toString(),
+      id: (ex.id ?? crypto.randomUUID()).toString(),
       name: ex.name,
       muscleGroup: ex.muscle_group,
     }));
