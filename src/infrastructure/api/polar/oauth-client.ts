@@ -20,7 +20,6 @@ export class PolarOAuthClient {
       response_type: 'code',
       client_id: this.config.clientId,
       redirect_uri: this.config.redirectUri,
-      scope: 'accesslink.read_all',
     });
     return `${this.config.authBaseUrl}/oauth/authorize?${params.toString()}`;
   }
