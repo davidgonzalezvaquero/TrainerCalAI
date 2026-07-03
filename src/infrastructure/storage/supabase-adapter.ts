@@ -177,7 +177,7 @@ export class SupabaseAdapter implements StoragePort {
       .from('lyfta_workouts')
       .upsert(
         workouts.map(workout => ({
-          id: workout.id,
+          id: crypto.randomUUID(),
           user_id: workout.userId,
           date: workout.date.toISOString().split('T')[0],
           name: workout.name,
@@ -186,9 +186,9 @@ export class SupabaseAdapter implements StoragePort {
           volume: workout.volume,
           intensity: workout.intensity,
         })),
-        { onConflict: 'id' }
+        { onConflict: 'user_id,date,name' }
       );
-    
+
     if (error) throw error;
   }
 
