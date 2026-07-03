@@ -8,7 +8,10 @@ export async function GET() {
     // TODO: Get userId from auth session
     const userId = 'current-user';
 
-    const workouts = await storage.getLyftaWorkouts(userId);
+    const start = new Date();
+    start.setFullYear(start.getFullYear() - 1);
+    const end = new Date();
+    const workouts = await storage.getLyftaWorkouts(userId, start, end);
     const lastWorkout = workouts[workouts.length - 1];
 
     if (!lastWorkout) {

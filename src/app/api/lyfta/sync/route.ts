@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
     await syncLyfta.execute(apiKey, userId);
 
     return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ error: 'Sync failed' }, { status: 500 });
+  } catch (error) {
+    console.error('Lyfta sync error:', error);
+    return NextResponse.json({ error: 'Sync failed', details: error instanceof Error ? error.message : 'Unknown error' }, { status: 500 });
   }
 }
