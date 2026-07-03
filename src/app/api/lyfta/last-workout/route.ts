@@ -12,6 +12,8 @@ export async function GET() {
     start.setFullYear(start.getFullYear() - 1);
     const end = new Date();
     const workouts = await storage.getLyftaWorkouts(userId, start, end);
+    console.log('Last workout query returned:', workouts.length, 'workouts');
+
     const lastWorkout = workouts[workouts.length - 1];
 
     if (!lastWorkout) {
@@ -26,7 +28,8 @@ export async function GET() {
       exercises: lastWorkout.exercises.length,
       prs: 0,
     });
-  } catch {
+  } catch (error) {
+    console.error('Last workout error:', error);
     return NextResponse.json(null);
   }
 }

@@ -13,18 +13,31 @@ interface Workout {
 
 export function LyftaWidget() {
   const [workout, setWorkout] = useState<Workout | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/lyfta/last-workout')
       .then(res => res.json())
-      .then(setWorkout)
-      .catch(console.error);
+      .then(data => {
+        setWorkout(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-slate-800 p-4 rounded-lg">
+        <div className="text-sm text-slate-400">Loading Lyfta data...</div>
+      </div>
+    );
+  }
 
   if (!workout) {
     return (
       <div className="bg-slate-800 p-4 rounded-lg">
-        <div className="text-sm text-slate-400">Loading Lyfta data...</div>
+        <h3 className="text-sm font-medium text-slate-400 mb-3">LYFTA - ÚLTIMO ENTRENAMIENTO</h3>
+        <div className="text-sm text-slate-400">No hay datos. Sincronizá con Lyfta primero.</div>
       </div>
     );
   }
