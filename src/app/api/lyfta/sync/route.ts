@@ -15,11 +15,6 @@ export async function POST(request: NextRequest) {
     }
 
     const lyfta = new LyftaAdapter();
-
-    const workouts = await lyfta.getWorkouts(apiKey);
-    console.log('Lyfta workouts fetched:', workouts.length, 'workouts');
-    console.log('First workout:', JSON.stringify(workouts[0], null, 2));
-
     const syncLyfta = new SyncLyftaUseCase(lyfta, storage);
     await syncLyfta.execute(apiKey, userId);
 

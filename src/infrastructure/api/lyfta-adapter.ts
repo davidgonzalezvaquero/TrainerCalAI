@@ -54,7 +54,7 @@ export class LyftaAdapter implements LyftaPort {
     return data.workouts.map((workout: LyftaWorkoutResponse) => ({
       id: (workout.id ?? crypto.randomUUID()).toString(),
       userId: '',
-      date: new Date(workout.date),
+      date: workout.date ? new Date(workout.date) : new Date(),
       name: workout.name,
       exercises: workout.exercises.map((ex: LyftaExerciseResponse) => ({
         id: (ex.id ?? crypto.randomUUID()).toString(),
