@@ -19,7 +19,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async getProfile(userId: string): Promise<Profile | null> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('profiles')
       .select('*')
       .eq('user_id', userId)
@@ -39,7 +39,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async upsertProfile(profile: Profile): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('profiles')
       .upsert({
         user_id: profile.userId,
@@ -56,7 +56,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async getConnection(userId: string, provider: string): Promise<Connection | null> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('connections')
       .select('*')
       .eq('user_id', userId)
@@ -75,7 +75,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async upsertConnection(connection: Connection): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('connections')
       .upsert({
         user_id: connection.userId,
@@ -89,7 +89,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async upsertPolarActivities(activities: PolarActivity[]): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('polar_activities')
       .upsert(
         activities.map(activity => ({
@@ -109,7 +109,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async upsertPolarSleep(sleep: PolarSleep[]): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('polar_sleep')
       .upsert(
         sleep.map(s => ({
@@ -128,7 +128,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async getPolarActivities(userId: string, startDate: Date, endDate: Date): Promise<PolarActivity[]> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('polar_activities')
       .select('*')
       .eq('user_id', userId)
@@ -151,7 +151,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async getPolarSleep(userId: string, startDate: Date, endDate: Date): Promise<PolarSleep[]> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('polar_sleep')
       .select('*')
       .eq('user_id', userId)
@@ -173,7 +173,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async upsertLyftaWorkouts(workouts: Workout[]): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('lyfta_workouts')
       .upsert(
         workouts.map(workout => ({
@@ -196,7 +196,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async getLyftaWorkouts(userId: string, startDate: Date, endDate: Date): Promise<Workout[]> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('lyfta_workouts')
       .select('*')
       .eq('user_id', userId)
@@ -218,7 +218,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async upsertPersonalRecords(prs: PersonalRecord[]): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('lyfta_personal_records')
       .upsert(
         prs.map(pr => ({
@@ -236,7 +236,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async upsertMeal(meal: Meal): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('meals')
       .upsert({
         id: meal.id,
@@ -258,7 +258,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async getMeals(userId: string, date: Date): Promise<Meal[]> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('meals')
       .select('*')
       .eq('user_id', userId)
@@ -284,7 +284,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async saveRoutine(routine: Routine): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('routines')
       .upsert({
         id: routine.id,
@@ -300,7 +300,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async getRoutines(userId: string): Promise<Routine[]> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('routines')
       .select('*')
       .eq('user_id', userId);
@@ -320,7 +320,7 @@ export class SupabaseAdapter implements StoragePort {
   }
 
   async saveRoutineLog(log: RoutineLog): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('routine_logs')
       .upsert({
         id: log.id,
