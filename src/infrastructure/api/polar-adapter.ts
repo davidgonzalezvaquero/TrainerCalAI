@@ -36,13 +36,17 @@ export class PolarAdapter implements PolarPort {
   private redirectUri: string;
 
   constructor() {
-    this.clientId = process.env.POLAR_CLIENT_ID;
-    this.clientSecret = process.env.POLAR_CLIENT_SECRET;
-    this.redirectUri = process.env.POLAR_REDIRECT_URI;
+    const clientId = process.env.POLAR_CLIENT_ID;
+    const clientSecret = process.env.POLAR_CLIENT_SECRET;
+    const redirectUri = process.env.POLAR_REDIRECT_URI;
 
-    if (!this.clientId || !this.clientSecret || !this.redirectUri) {
+    if (!clientId || !clientSecret || !redirectUri) {
       throw new Error('Missing required Polar environment variables: POLAR_CLIENT_ID, POLAR_CLIENT_SECRET, POLAR_REDIRECT_URI');
     }
+
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
+    this.redirectUri = redirectUri;
   }
 
   private formatDate(date: Date): string {
