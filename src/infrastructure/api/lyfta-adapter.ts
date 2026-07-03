@@ -104,11 +104,11 @@ export class LyftaAdapter implements LyftaPort {
           exercises: routine.exercises.map((ex) => ({
             exercise_id: ex.exerciseId,
             name: ex.exerciseName,
-            sets: Array(ex.sets).fill({
+            sets: Array.from({ length: ex.sets }, () => ({
               reps: parseInt(ex.reps) || 8,
               weight: ex.weight || 0,
               rest_seconds: ex.restSeconds,
-            }),
+            })),
           })),
         },
       }),
