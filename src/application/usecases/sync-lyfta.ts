@@ -13,7 +13,8 @@ export class SyncLyftaUseCase {
       const workoutsWithUser = workouts.map(w => ({ ...w, userId }));
       await this.storagePort.upsertLyftaWorkouts(workoutsWithUser);
     } catch (error) {
-      throw new Error(`Failed to sync Lyfta data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('SyncLyftaUseCase error:', error);
+      throw new Error(`Failed to sync Lyfta data: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 }

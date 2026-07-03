@@ -189,7 +189,10 @@ export class SupabaseAdapter implements StoragePort {
         { onConflict: 'user_id,date,name' }
       );
 
-    if (error) throw error;
+    if (error) {
+      console.error('Supabase upsertLyftaWorkouts error:', error);
+      throw error;
+    }
   }
 
   async getLyftaWorkouts(userId: string, startDate: Date, endDate: Date): Promise<Workout[]> {
