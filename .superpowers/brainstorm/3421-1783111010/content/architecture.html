@@ -1,0 +1,40 @@
+<h2>Arquitecturas Propuestas</h2>
+<p class="subtitle">3 enfoques para TrainerCalAI - cuál se adapta mejor a tu caso de uso</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Monolito Next.js (Recomendado)</h3>
+      <p>Todo en una app Next.js con Supabase. Server Actions para APIs externas.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Despliegue simple (Vercel)</li><li>Menos infraestructura</li><li>Hot reload rápido</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Acoplamiento entre módulos</li><li>Scaling limitado</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Microservicios + Next.js</h3>
+      <p>Next.js frontend + API routes separados para Polar, Lyfta, y IA.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Desacoplamiento total</li><li>Scaling independiente</li><li>Error handling aislado</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Complejidad operativa</li><li>Más servicios que mantener</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Modular en Next.js</h3>
+      <p>Next.js con módulos bien separados (lib/) pero desplegados juntos.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Buena separación</li><li>Fácil de desarrollar</li><li>Deploy simple</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Requiere disciplina</li><li>Acoplamiento implícito</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
