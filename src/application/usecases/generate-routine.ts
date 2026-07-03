@@ -14,23 +14,27 @@ export class GenerateRoutineUseCase {
     availability: number;
     experienceLevel: string;
   }): Promise<Routine> {
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30);
+    try {
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 30);
 
-    const polarActivities = await this.storagePort.getPolarActivities(userId, startDate, endDate);
-    const polarSleep = await this.storagePort.getPolarSleep(userId, startDate, endDate);
-    const workouts = await this.storagePort.getLyftaWorkouts(userId, startDate, endDate);
+      const polarActivities = await this.storagePort.getPolarActivities(userId, startDate, endDate);
+      const polarSleep = await this.storagePort.getPolarSleep(userId, startDate, endDate);
+      const workouts = await this.storagePort.getLyftaWorkouts(userId, startDate, endDate);
 
-    const routine = await this.aiPort.generateRoutine({
-      polarActivities,
-      polarSleep,
-      workouts,
-      ...params,
-    });
+      const routine = await this.aiPort.generateRoutine({
+        polarActivities,
+        polarSleep,
+        workouts,
+        ...params,
+      });
 
-    routine.userId = userId;
-    await this.storagePort.saveRoutine(routine);
-    return routine;
+      routine.userId = userId;
+      await this.storagePort.saveRoutine(routine);
+      return routine;
+    } catch (error) {
+      throw new Error(`Failed to generate routine: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 }

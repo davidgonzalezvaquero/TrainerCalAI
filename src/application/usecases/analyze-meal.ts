@@ -9,17 +9,21 @@ export class AnalyzeMealUseCase {
   ) {}
 
   async execute(userId: string, imageBase64: string, date: Date, time: string): Promise<Meal> {
-    const analysis = await this.aiPort.analyzeFood(imageBase64);
-    
-    const meal: Meal = {
-      id: crypto.randomUUID(),
-      userId,
-      date,
-      time,
-      ...analysis,
-    };
+    try {
+      const analysis = await this.aiPort.analyzeFood(imageBase64);
+      
+      const meal: Meal = {
+        id: crypto.randomUUID(),
+        userId,
+        date,
+        time,
+        ...analysis,
+      };
 
-    await this.storagePort.upsertMeal(meal);
-    return meal;
+      await this.storagePort.upsertMeal(meal);
+      return meal;
+    } catch (error) {
+      throw new Error(`Failed to analyze meal: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 }

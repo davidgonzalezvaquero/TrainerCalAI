@@ -8,8 +8,12 @@ export class SyncLyftaUseCase {
   ) {}
 
   async execute(apiKey: string, userId: string): Promise<void> {
-    const workouts = await this.lyftaPort.getWorkouts(apiKey);
-    const workoutsWithUser = workouts.map(w => ({ ...w, userId }));
-    await this.storagePort.upsertLyftaWorkouts(workoutsWithUser);
+    try {
+      const workouts = await this.lyftaPort.getWorkouts(apiKey);
+      const workoutsWithUser = workouts.map(w => ({ ...w, userId }));
+      await this.storagePort.upsertLyftaWorkouts(workoutsWithUser);
+    } catch (error) {
+      throw new Error(`Failed to sync Lyfta data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 }
