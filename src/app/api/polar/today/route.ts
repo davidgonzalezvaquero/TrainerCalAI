@@ -6,7 +6,7 @@ export async function GET() {
     const storage = new SupabaseAdapter();
 
     // TODO: Get userId from auth session
-    const userId = 'current-user';
+    const userId = '00000000-0000-0000-0000-000000000001';
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
