@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, routine });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Generation failed' }, { status: 500 });
   }
 }

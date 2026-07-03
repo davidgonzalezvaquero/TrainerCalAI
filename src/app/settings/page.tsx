@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 export default function SettingsPage() {
-  const [polarConnected, setPolarConnected] = useState(false);
+  const [polarConnected] = useState(false);
   const [lyftaApiKey, setLyftaApiKey] = useState('');
 
   const handleConnectPolar = () => {

@@ -11,8 +11,8 @@ export async function POST(request: NextRequest) {
 
     const result = await pushRoutine.execute(apiKey, routine);
 
-    return NextResponse.json({ success: true, ...result });
-  } catch (error) {
+    return NextResponse.json(result);
+  } catch {
     return NextResponse.json({ error: 'Push failed' }, { status: 500 });
   }
 }

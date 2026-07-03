@@ -6,7 +6,7 @@ export async function GET() {
     const polar = new PolarAdapter();
     const authUrl = polar.getAuthorizationUrl();
     return NextResponse.redirect(authUrl);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to generate authorization URL' }, { status: 500 });
   }
 }

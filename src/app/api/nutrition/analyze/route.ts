@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     const meal = await analyzeMeal.execute(userId, imageBase64, new Date(date), time);
 
     return NextResponse.json({ success: true, meal });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Analysis failed' }, { status: 500 });
   }
 }

@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { Routine } from '../../domain/entities/routine';
+import { Routine, RoutineExercise } from '../../domain/entities/routine';
 import { PolarActivity, PolarSleep } from '../../domain/entities/polar-data';
 import { Workout } from '../../domain/entities/workout';
 import { AIPort } from '../../domain/interfaces/ai-port';
@@ -48,7 +48,7 @@ export class ClaudeAdapter implements AIPort {
 
       const content = response.content[0]?.type === 'text' ? response.content[0].text : '{}';
       
-      let result: any;
+      let result: { name?: string; exercises?: Array<Partial<RoutineExercise>>; durationWeeks?: number };
       try {
         result = JSON.parse(content);
       } catch {
@@ -64,7 +64,15 @@ export class ClaudeAdapter implements AIPort {
         userId: '',
         name: result.name || 'Generated Routine',
         createdAt: new Date(),
-        exercises: result.exercises || [],
+        exercises: (result.exercises || []).map((ex): RoutineExercise => ({
+          exerciseId: ex.exerciseId || crypto.randomUUID(),
+          exerciseName: ex.exerciseName || 'Unknown Exercise',
+          sets: ex.sets || 3,
+          reps: ex.reps || '10',
+          restSeconds: ex.restSeconds || 60,
+          weight: ex.weight,
+          notes: ex.notes,
+        })),
         goal: params.goal,
         difficulty: experienceLevel,
         durationWeeks: result.durationWeeks || 4,

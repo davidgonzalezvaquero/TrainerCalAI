@@ -58,7 +58,7 @@ Respond in JSON format:
 
       const content = response.choices[0]?.message?.content || '{}';
       
-      let result: any;
+      let result: { description?: string; calories?: number; protein?: number; carbs?: number; fat?: number; confidence?: number };
       try {
         result = JSON.parse(content);
       } catch {
@@ -80,7 +80,8 @@ Respond in JSON format:
     }
   }
 
-  async generateRoutine(params: {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async generateRoutine(_params: {
     polarActivities: PolarActivity[];
     polarSleep: PolarSleep[];
     workouts: Workout[];
