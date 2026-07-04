@@ -6,10 +6,6 @@ interface TokenResponse {
   x_user_id: number;
 }
 
-interface UserResponse {
-  'polar-user-id': string;
-}
-
 export class PolarOAuthClient {
   constructor(
     private readonly config: PolarConfig,
