@@ -4,11 +4,11 @@ import { Workout, PersonalRecord } from '../../domain/entities/workout';
 import { Meal } from '../../domain/entities/meal';
 import { PolarActivity, PolarSleep } from '../../domain/entities/polar-data';
 import { Routine, RoutineLog } from '../../domain/entities/routine';
-import { supabaseAdmin } from '../../lib/supabase-admin';
+import { getSupabaseAdmin } from '../../lib/supabase-admin';
 
 export class SupabaseAdapter implements StoragePort {
   async getUser(id: string): Promise<User | null> {
-    const { data, error } = await supabaseAdmin.auth.getUser(id);
+    const { data, error } = await getSupabaseAdmin().auth.getUser(id);
     if (error || !data.user) return null;
     
     return {
