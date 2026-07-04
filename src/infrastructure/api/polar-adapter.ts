@@ -59,7 +59,7 @@ export class PolarAdapter implements PolarPort {
     return activities;
   }
 
-  async getSleep(userId: string, accessToken: string, startDate: Date, endDate: Date): Promise<PolarSleep[]> {
+  async getSleep(userId: string, accessToken: string, _startDate: Date, _endDate: Date): Promise<PolarSleep[]> {
     const response = await fetch(
       `https://www.polaraccesslink.com/v3/users/sleep`,
       {
