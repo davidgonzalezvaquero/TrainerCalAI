@@ -8,7 +8,7 @@ export interface HttpResponse {
 export interface HttpClient {
   get(path: string, token?: string): Promise<HttpResponse>;
   post(path: string, body: unknown, token?: string): Promise<HttpResponse>;
-  postForm(path: string, body: URLSearchParams, token?: string): Promise<HttpResponse>;
+  postForm(path: string, body: URLSearchParams, token?: string, basicAuth?: string): Promise<HttpResponse>;
 }
 
 export class FetchHttpClient implements HttpClient {
