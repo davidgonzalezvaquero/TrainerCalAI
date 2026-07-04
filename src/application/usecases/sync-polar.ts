@@ -7,13 +7,15 @@ export class SyncPolarUseCase {
     private storagePort: StoragePort
   ) {}
 
-  async execute(userId: string, accessToken: string, startDate: Date, endDate: Date): Promise<void> {
+  async execute(userId: string, polarUserId: string, accessToken: string, startDate: Date, endDate: Date): Promise<void> {
     try {
-      const activities = await this.polarPort.getActivities(userId, accessToken, startDate, endDate);
-      await this.storagePort.upsertPolarActivities(activities);
+      const activities = await this.polarPort.getActivities(polarUserId, accessToken, startDate, endDate);
+      const mappedActivities = activities.map(a => ({ ...a, userId }));
+      await this.storagePort.upsertPolarActivities(mappedActivities);
 
-      const sleep = await this.polarPort.getSleep(userId, accessToken, startDate, endDate);
-      await this.storagePort.upsertPolarSleep(sleep);
+      const sleep = await this.polarPort.getSleep(polarUserId, accessToken, startDate, endDate);
+      const mappedSleep = sleep.map(s => ({ ...s, userId }));
+      await this.storagePort.upsertPolarSleep(mappedSleep);
     } catch (error) {
       throw new Error(`Failed to sync Polar data: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }

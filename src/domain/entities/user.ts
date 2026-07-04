@@ -20,6 +20,7 @@ export interface Connection {
   userId: string;
   provider: 'polar' | 'lyfta';
   accessToken: string;
+  providerUserId?: string;
   refreshToken?: string;
   expiresAt?: Date;
 }

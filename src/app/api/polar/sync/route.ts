@@ -14,18 +14,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Polar not connected' }, { status: 400 });
     }
 
+    const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const end = endDate ? new Date(endDate) : new Date();
+
     const polar = new PolarAdapter();
     const syncPolar = new SyncPolarUseCase(polar, storage);
 
-    await syncPolar.execute(
-      userId,
-      connection.accessToken,
-      new Date(startDate),
-      new Date(endDate)
-    );
+    await syncPolar.execute(userId, connection.providerUserId ?? userId, connection.accessToken, start, end);
 
     return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ error: 'Sync failed' }, { status: 500 });
+  } catch (error) {
+    console.error('Polar sync error:', error);
+    return NextResponse.json({ error: 'Sync failed', details: String(error) }, { status: 500 });
   }
 }

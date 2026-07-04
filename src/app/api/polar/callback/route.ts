@@ -14,15 +14,16 @@ export async function GET(request: NextRequest) {
 
   try {
     const polar = new PolarAdapter();
-    const { accessToken } = await polar.exchangeCodeForToken(code);
+    const { accessToken, userId: polarUserId } = await polar.exchangeCodeForToken(code);
 
     const storage = new SupabaseAdapter();
     await storage.upsertConnection({
       userId: DEV_USER_ID,
       provider: 'polar',
       accessToken,
+      providerUserId: polarUserId,
     });
-    console.log('Polar connection saved for', DEV_USER_ID);
+    console.log('Polar connection saved for', DEV_USER_ID, 'polarUserId:', polarUserId);
 
     return NextResponse.redirect(new URL('/settings?success=polar_connected', request.url));
   } catch (error) {

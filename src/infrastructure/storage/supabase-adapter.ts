@@ -69,6 +69,7 @@ export class SupabaseAdapter implements StoragePort {
       userId: data.user_id,
       provider: data.provider,
       accessToken: data.access_token,
+      providerUserId: data.provider_user_id,
       refreshToken: data.refresh_token,
       expiresAt: data.expires_at ? new Date(data.expires_at) : undefined,
     };
@@ -81,6 +82,7 @@ export class SupabaseAdapter implements StoragePort {
         user_id: connection.userId,
         provider: connection.provider,
         access_token: connection.accessToken,
+        provider_user_id: connection.providerUserId,
         refresh_token: connection.refreshToken,
         expires_at: connection.expiresAt?.toISOString(),
       }, { onConflict: 'user_id,provider' });
