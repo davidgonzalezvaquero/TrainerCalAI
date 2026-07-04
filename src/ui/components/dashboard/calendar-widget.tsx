@@ -10,11 +10,9 @@ export function CalendarWidget({ selectedDate, onDateSelect }: CalendarWidgetPro
   const today = new Date();
   
   const weekDays = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date(today);
     const dayOfWeek = today.getDay();
     const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-    const targetDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + mondayOffset + i);
-    return targetDate;
+    return new Date(today.getFullYear(), today.getMonth(), today.getDate() + mondayOffset + i);
   });
 
   return (
