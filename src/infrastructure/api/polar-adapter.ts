@@ -31,9 +31,9 @@ export class PolarAdapter implements PolarPort {
   async getActivities(userId: string, accessToken: string, startDate: Date, endDate: Date): Promise<PolarActivity[]> {
     const activities: PolarActivity[] = [];
     const current = new Date(startDate);
-    const end = new Date(endDate);
+    const maxEnd = new Date(Math.min(endDate.getTime(), startDate.getTime() + 27 * 24 * 60 * 60 * 1000));
 
-    while (current <= end) {
+    while (current <= maxEnd) {
       const dateStr = this.dataMapper.formatDate(current);
       const response = await fetch(
         `https://www.polaraccesslink.com/v3/users/activities/${dateStr}`,
@@ -60,8 +60,10 @@ export class PolarAdapter implements PolarPort {
   }
 
   async getSleep(userId: string, accessToken: string, startDate: Date, endDate: Date): Promise<PolarSleep[]> {
+    const diffDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    const cappedEnd = diffDays > 28 ? new Date(startDate.getTime() + 28 * 24 * 60 * 60 * 1000) : endDate;
     const start = this.dataMapper.formatDate(startDate);
-    const end = this.dataMapper.formatDate(endDate);
+    const end = this.dataMapper.formatDate(cappedEnd);
     const response = await fetch(
       `https://www.polaraccesslink.com/v3/users/sleep?from=${start}&to=${end}`,
       {
