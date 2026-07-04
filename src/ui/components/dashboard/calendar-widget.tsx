@@ -13,8 +13,8 @@ export function CalendarWidget({ selectedDate, onDateSelect }: CalendarWidgetPro
     const date = new Date(today);
     const dayOfWeek = today.getDay();
     const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-    date.setDate(date.getDate() + mondayOffset + i);
-    return date;
+    const targetDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + mondayOffset + i);
+    return targetDate;
   });
 
   return (
