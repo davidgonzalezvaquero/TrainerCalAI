@@ -25,13 +25,19 @@ export class PolarOAuthClient {
   }
 
   async exchangeCodeForToken(code: string): Promise<{ accessToken: string; userId: string }> {
+    const credentials = Buffer.from(
+      `${this.config.clientId}:${this.config.clientSecret}`
+    ).toString('base64');
+
     const tokenResponse = await this.httpClient.postForm(
       `${this.config.apiBaseUrl}/oauth2/token`,
       new URLSearchParams({
         grant_type: 'authorization_code',
         code,
         redirect_uri: this.config.redirectUri,
-      })
+      }),
+      undefined,
+      credentials
     );
 
     if (!tokenResponse.ok) {

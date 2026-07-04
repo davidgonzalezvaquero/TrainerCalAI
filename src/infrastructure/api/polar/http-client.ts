@@ -30,13 +30,25 @@ export class FetchHttpClient implements HttpClient {
     });
   }
 
-  async postForm(path: string, body: URLSearchParams, token?: string): Promise<HttpResponse> {
+  async postForm(
+    path: string,
+    body: URLSearchParams,
+    tokenOrBasic?: string,
+    basicAuth?: string
+  ): Promise<HttpResponse> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    if (basicAuth) {
+      headers['Authorization'] = `Basic ${basicAuth}`;
+    } else if (tokenOrBasic) {
+      headers['Authorization'] = `Bearer ${tokenOrBasic}`;
+    }
+
     return fetch(path, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
+      headers,
       body: body.toString(),
     });
   }
