@@ -5,14 +5,14 @@ export async function GET() {
   try {
     const storage = new SupabaseAdapter();
 
-    // TODO: Get userId from auth session
     const userId = '00000000-0000-0000-0000-000000000001';
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const start = new Date(now);
+    start.setDate(start.getDate() - 28);
 
-    const activities = await storage.getPolarActivities(userId, today, today);
-    const sleep = await storage.getPolarSleep(userId, today, today);
+    const activities = await storage.getPolarActivities(userId, start, now);
+    const sleep = await storage.getPolarSleep(userId, start, now);
 
     const activity = activities[0];
     const sleepData = sleep[0];

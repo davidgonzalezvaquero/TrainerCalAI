@@ -135,7 +135,8 @@ export class SupabaseAdapter implements StoragePort {
       .select('*')
       .eq('user_id', userId)
       .gte('date', startDate.toISOString().split('T')[0])
-      .lte('date', endDate.toISOString().split('T')[0]);
+      .lte('date', endDate.toISOString().split('T')[0])
+      .order('date', { ascending: false });
     
     if (error || !data) return [];
     
@@ -158,7 +159,8 @@ export class SupabaseAdapter implements StoragePort {
       .select('*')
       .eq('user_id', userId)
       .gte('date', startDate.toISOString().split('T')[0])
-      .lte('date', endDate.toISOString().split('T')[0]);
+      .lte('date', endDate.toISOString().split('T')[0])
+      .order('date', { ascending: false });
     
     if (error || !data) return [];
     
