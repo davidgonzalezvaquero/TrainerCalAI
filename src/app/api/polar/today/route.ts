@@ -23,6 +23,8 @@ export async function GET() {
       steps: 0,
       sleepScore: sleepData?.sleepScore ?? 0,
       sleepDuration: sleepData?.sleepDuration ?? 0,
+      calories: activity?.calories ?? 0,
+      activeMinutes: activity?.duration ? activity.duration / 60 : 0,
     });
   } catch {
     return NextResponse.json({

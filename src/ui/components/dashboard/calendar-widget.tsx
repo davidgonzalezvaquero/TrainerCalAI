@@ -6,12 +6,14 @@ interface CalendarWidgetProps {
 }
 
 export function CalendarWidget({ selectedDate, onDateSelect }: CalendarWidgetProps) {
-  const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+  const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
   const today = new Date();
   
   const weekDays = Array.from({ length: 7 }, (_, i) => {
     const date = new Date(today);
-    date.setDate(date.getDate() - today.getDay() + i);
+    const dayOfWeek = today.getDay();
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    date.setDate(date.getDate() + mondayOffset + i);
     return date;
   });
 
