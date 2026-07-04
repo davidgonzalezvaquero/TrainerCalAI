@@ -3,6 +3,7 @@ import { HttpClient } from './http-client';
 
 interface TokenResponse {
   access_token: string;
+  x_user_id: number;
 }
 
 interface UserResponse {
@@ -30,7 +31,7 @@ export class PolarOAuthClient {
     ).toString('base64');
 
     const tokenResponse = await this.httpClient.postForm(
-      `${this.config.apiBaseUrl}/oauth2/token`,
+      this.config.tokenUrl,
       new URLSearchParams({
         grant_type: 'authorization_code',
         code,
@@ -48,21 +49,21 @@ export class PolarOAuthClient {
 
     const tokenData = (await tokenResponse.json()) as TokenResponse;
 
-    const userResponse = await this.httpClient.post(
+    const userId = String(tokenData.x_user_id);
+
+    const regResponse = await this.httpClient.post(
       `${this.config.apiBaseUrl}/users`,
-      { 'member-id': crypto.randomUUID() },
+      { 'member-id': userId },
       tokenData.access_token
     );
 
-    if (!userResponse.ok) {
-      throw new Error(`Failed to register Polar user: ${userResponse.status}`);
+    if (!regResponse.ok && regResponse.status !== 409) {
+      throw new Error(`Failed to register Polar user: ${regResponse.status}`);
     }
-
-    const userData = (await userResponse.json()) as UserResponse;
 
     return {
       accessToken: tokenData.access_token,
-      userId: userData['polar-user-id'],
+      userId,
     };
   }
 }

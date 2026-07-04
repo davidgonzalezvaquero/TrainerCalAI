@@ -4,6 +4,7 @@ export interface PolarConfig {
   redirectUri: string;
   apiBaseUrl: string;
   authBaseUrl: string;
+  tokenUrl: string;
 }
 
 export function createPolarConfig(overrides?: Partial<PolarConfig>): PolarConfig {
@@ -21,5 +22,6 @@ export function createPolarConfig(overrides?: Partial<PolarConfig>): PolarConfig
     redirectUri,
     apiBaseUrl: overrides?.apiBaseUrl ?? 'https://polaraccesslink.com/v3',
     authBaseUrl: overrides?.authBaseUrl ?? 'https://flow.polar.com',
+    tokenUrl: overrides?.tokenUrl ?? 'https://polarremote.com/v2/oauth2/token',
   };
 }

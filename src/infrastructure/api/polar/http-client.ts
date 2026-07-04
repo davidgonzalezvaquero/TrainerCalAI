@@ -38,6 +38,7 @@ export class FetchHttpClient implements HttpClient {
   ): Promise<HttpResponse> {
     const headers: Record<string, string> = {
       'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json;charset=UTF-8',
     };
 
     if (basicAuth) {
