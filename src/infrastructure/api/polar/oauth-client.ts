@@ -21,12 +21,12 @@ export class PolarOAuthClient {
       client_id: this.config.clientId,
       redirect_uri: this.config.redirectUri,
     });
-    return `${this.config.authBaseUrl}/oauth/authorize?${params.toString()}`;
+    return `${this.config.authBaseUrl}/oauth2/authorization?${params.toString()}`;
   }
 
   async exchangeCodeForToken(code: string): Promise<{ accessToken: string; userId: string }> {
     const tokenResponse = await this.httpClient.post(
-      `${this.config.authBaseUrl}/oauth/token`,
+      `${this.config.authBaseUrl}/oauth2/token`,
       new URLSearchParams({
         grant_type: 'authorization_code',
         code,
