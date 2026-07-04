@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PolarAdapter } from '../../../../infrastructure/api/polar-adapter';
 import { SupabaseAdapter } from '../../../../infrastructure/storage/supabase-adapter';
 
+function polarUserIdToUuid(polarUserId: string): string {
+  const padded = polarUserId.padStart(12, '0');
+  return `00000000-0000-0000-0000-${padded}`;
+}
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const code = searchParams.get('code');
@@ -13,11 +18,12 @@ export async function GET(request: NextRequest) {
   try {
     const polar = new PolarAdapter();
     const { accessToken, userId } = await polar.exchangeCodeForToken(code);
-    console.log('Polar token exchanged, userId:', userId);
+    const uuid = polarUserIdToUuid(userId);
+    console.log('Polar token exchanged, userId:', userId, '-> uuid:', uuid);
 
     const storage = new SupabaseAdapter();
     await storage.upsertConnection({
-      userId,
+      userId: uuid,
       provider: 'polar',
       accessToken,
     });
