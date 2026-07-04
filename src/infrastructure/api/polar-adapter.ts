@@ -29,35 +29,44 @@ export class PolarAdapter implements PolarPort {
   }
 
   async getActivities(userId: string, accessToken: string, startDate: Date, endDate: Date): Promise<PolarActivity[]> {
-    const start = this.dataMapper.formatDate(startDate);
-    const end = this.dataMapper.formatDate(endDate);
+    const activities: PolarActivity[] = [];
+    const current = new Date(startDate);
+    const end = new Date(endDate);
 
-    const response = await fetch(
-      `https://polaraccesslink.com/v3/users/${userId}/activity-samples/${start}/${end}`,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
+    while (current <= end) {
+      const dateStr = this.dataMapper.formatDate(current);
+      const response = await fetch(
+        `https://www.polaraccesslink.com/v3/users/activities/${dateStr}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/json',
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        activities.push(this.dataMapper.toActivity(data, userId, current));
+      } else if (response.status !== 404) {
+        const body = await response.text();
+        throw new Error(`Failed to fetch Polar activity for ${dateStr}: ${response.status} ${body}`);
       }
-    );
 
-    if (!response.ok) {
-      const body = await response.text();
-      throw new Error(`Failed to fetch Polar activities: ${response.status} ${body}`);
+      current.setDate(current.getDate() + 1);
     }
 
-    const data = await response.json();
-    return data.map((activity: unknown) =>
-      this.dataMapper.toActivity(activity, userId)
-    );
+    return activities;
   }
 
   async getSleep(userId: string, accessToken: string, startDate: Date, endDate: Date): Promise<PolarSleep[]> {
-    const start = this.dataMapper.formatDate(startDate);
-    const end = this.dataMapper.formatDate(endDate);
-
     const response = await fetch(
-      `https://polaraccesslink.com/v3/users/${userId}/sleep/${start}/${end}`,
+      `https://www.polaraccesslink.com/v3/users/sleep`,
       {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'application/json',
+        },
       }
     );
 
@@ -67,7 +76,8 @@ export class PolarAdapter implements PolarPort {
     }
 
     const data = await response.json();
-    return data.map((sleep: unknown) =>
+    const nights = data.nights ?? [];
+    return nights.map((sleep: unknown) =>
       this.dataMapper.toSleep(sleep, userId)
     );
   }
