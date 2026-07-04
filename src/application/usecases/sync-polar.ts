@@ -17,7 +17,8 @@ export class SyncPolarUseCase {
       const mappedSleep = sleep.map(s => ({ ...s, userId }));
       await this.storagePort.upsertPolarSleep(mappedSleep);
     } catch (error) {
-      throw new Error(`Failed to sync Polar data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('SyncPolarUseCase error:', error);
+      throw new Error(`Failed to sync Polar data: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 }

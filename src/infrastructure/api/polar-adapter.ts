@@ -40,7 +40,8 @@ export class PolarAdapter implements PolarPort {
     );
 
     if (!response.ok) {
-      throw new Error('Failed to fetch Polar activities');
+      const body = await response.text();
+      throw new Error(`Failed to fetch Polar activities: ${response.status} ${body}`);
     }
 
     const data = await response.json();
@@ -61,7 +62,8 @@ export class PolarAdapter implements PolarPort {
     );
 
     if (!response.ok) {
-      throw new Error('Failed to fetch Polar sleep');
+      const body = await response.text();
+      throw new Error(`Failed to fetch Polar sleep: ${response.status} ${body}`);
     }
 
     const data = await response.json();
