@@ -35,7 +35,9 @@ export class PolarOAuthClient {
     );
 
     if (!tokenResponse.ok) {
-      throw new Error('Failed to exchange code for token');
+      const errorText = await tokenResponse.text();
+      console.error('Polar token exchange failed:', tokenResponse.status, errorText);
+      throw new Error(`Failed to exchange code for token: ${tokenResponse.status} ${errorText}`);
     }
 
     const tokenData = (await tokenResponse.json()) as TokenResponse;
