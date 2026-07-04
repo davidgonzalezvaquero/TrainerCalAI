@@ -25,7 +25,7 @@ export class PolarOAuthClient {
   }
 
   async exchangeCodeForToken(code: string): Promise<{ accessToken: string; userId: string }> {
-    const tokenResponse = await this.httpClient.post(
+    const tokenResponse = await this.httpClient.postForm(
       `${this.config.authBaseUrl}/oauth2/token`,
       new URLSearchParams({
         grant_type: 'authorization_code',

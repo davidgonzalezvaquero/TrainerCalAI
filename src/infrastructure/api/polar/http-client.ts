@@ -2,11 +2,13 @@ export interface HttpResponse {
   ok: boolean;
   status: number;
   json(): Promise<unknown>;
+  text(): Promise<string>;
 }
 
 export interface HttpClient {
   get(path: string, token?: string): Promise<HttpResponse>;
   post(path: string, body: unknown, token?: string): Promise<HttpResponse>;
+  postForm(path: string, body: URLSearchParams, token?: string): Promise<HttpResponse>;
 }
 
 export class FetchHttpClient implements HttpClient {
@@ -25,6 +27,17 @@ export class FetchHttpClient implements HttpClient {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
       body: JSON.stringify(body),
+    });
+  }
+
+  async postForm(path: string, body: URLSearchParams, token?: string): Promise<HttpResponse> {
+    return fetch(path, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: body.toString(),
     });
   }
 }
