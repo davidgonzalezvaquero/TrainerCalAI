@@ -10,6 +10,6 @@ interface DashboardState {
 export const useDashboardStore = create<DashboardState>((set) => ({
   selectedDate: new Date(),
   refreshKey: 0,
-  setSelectedDate: (date) => set({ selectedDate: date }),
+  setSelectedDate: (date: Date) => set({ selectedDate: date }),
   incrementRefresh: () => set((state) => ({ refreshKey: state.refreshKey + 1 })),
 }));

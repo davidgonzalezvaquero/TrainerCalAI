@@ -6,6 +6,7 @@ import { DEV_USER_ID } from '@/lib/constants';
 import { PolarWidget } from '@/ui/components/dashboard/polar-widget';
 import { LyftaWidget } from '@/ui/components/dashboard/lyfta-widget';
 import { CalendarWidget } from '@/ui/components/dashboard/calendar-widget';
+import { ErrorBoundary } from '@/ui/components/shared/error-boundary';
 
 export default function DashboardPage() {
   const { selectedDate, setSelectedDate, refreshKey, incrementRefresh } = useDashboardStore();
@@ -54,8 +55,12 @@ export default function DashboardPage() {
         />
 
         <div className="grid grid-cols-2 gap-4 mt-6">
-          <PolarWidget key={`polar-${refreshKey}`} date={selectedDate} />
-          <LyftaWidget key={`lyfta-${refreshKey}`} date={selectedDate} />
+          <ErrorBoundary>
+            <PolarWidget key={`polar-${refreshKey}`} date={selectedDate} />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <LyftaWidget key={`lyfta-${refreshKey}`} date={selectedDate} />
+          </ErrorBoundary>
         </div>
       </div>
     </div>

@@ -28,13 +28,21 @@ export function LyftaWidget({ date }: LyftaWidgetProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+      return;
+    }
+    
+    const abortController = new AbortController();
+    
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       
       try {
         const dateStr = date.toISOString().split('T')[0];
-        const res = await fetch(`/api/lyfta/date?date=${dateStr}`);
+        const res = await fetch(`/api/lyfta/date?date=${dateStr}`, {
+          signal: abortController.signal,
+        });
         
         if (!res.ok) {
           throw new Error(`Error fetching Lyfta data: ${res.status}`);
@@ -43,6 +51,9 @@ export function LyftaWidget({ date }: LyftaWidgetProps) {
         const data = await res.json();
         setWorkout(data.workouts?.[0] ?? null);
       } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return;
+        }
         console.error('Failed to fetch Lyfta data:', err);
         setError(err instanceof Error ? err.message : 'Error al cargar datos de Lyfta');
       } finally {
@@ -51,6 +62,8 @@ export function LyftaWidget({ date }: LyftaWidgetProps) {
     };
 
     fetchData();
+    
+    return () => abortController.abort();
   }, [date]);
 
   if (loading) {

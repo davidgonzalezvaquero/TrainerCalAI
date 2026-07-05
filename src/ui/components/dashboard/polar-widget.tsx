@@ -29,13 +29,21 @@ export function PolarWidget({ date }: PolarWidgetProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+      return;
+    }
+    
+    const abortController = new AbortController();
+    
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       
       try {
         const dateStr = date.toISOString().split('T')[0];
-        const res = await fetch(`/api/polar/date?date=${dateStr}`);
+        const res = await fetch(`/api/polar/date?date=${dateStr}`, {
+          signal: abortController.signal,
+        });
         
         if (!res.ok) {
           throw new Error(`Error fetching Polar data: ${res.status}`);
@@ -44,6 +52,9 @@ export function PolarWidget({ date }: PolarWidgetProps) {
         const json = await res.json();
         setData(json);
       } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return;
+        }
         console.error('Failed to fetch Polar data:', err);
         setError(err instanceof Error ? err.message : 'Error al cargar datos de Polar');
       } finally {
@@ -52,6 +63,8 @@ export function PolarWidget({ date }: PolarWidgetProps) {
     };
 
     fetchData();
+    
+    return () => abortController.abort();
   }, [date]);
 
   if (loading) {
