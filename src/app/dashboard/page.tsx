@@ -8,11 +8,45 @@ import { PolarWidget } from '@/ui/components/dashboard/polar-widget';
 import { LyftaWidget } from '@/ui/components/dashboard/lyfta-widget';
 import { CalendarWidget } from '@/ui/components/dashboard/calendar-widget';
 
+interface PolarActivity {
+  calories: number;
+  activeMinutes: number;
+  heartRate: { average: number };
+  nightlyRecharge: number;
+}
+
+interface PolarSleep {
+  sleepScore: number;
+  duration: number;
+  deepSleep: number;
+  remSleep: number;
+  lightSleep: number;
+}
+
+interface PolarDataState {
+  activity: PolarActivity | null;
+  sleep: PolarSleep | null;
+}
+
+interface LyftaWorkout {
+  id: string;
+  name: string;
+  date: string;
+  duration: number;
+  volume: number;
+  exercises: number;
+  prs: number;
+}
+
+interface LyftaDataState {
+  workouts: LyftaWorkout[];
+}
+
 export default function DashboardPage() {
   const { selectedDate, setSelectedDate, refreshKey, incrementRefresh } = useDashboardStore();
   const [syncing, setSyncing] = useState({ polar: false, lyfta: false });
-  const [polarData, setPolarData] = useState<{ activity: any; sleep: any } | null>(null);
-  const [lyftaData, setLyftaData] = useState<{ workouts: any[] } | null>(null);
+  const [polarData, setPolarData] = useState<PolarDataState | null>(null);
+  const [lyftaData, setLyftaData] = useState<LyftaDataState | null>(null);
   const [loadingMetrics, setLoadingMetrics] = useState(true);
 
   useEffect(() => {
