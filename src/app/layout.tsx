@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Navigation } from "@/ui/components/shared/navigation";
+import { ErrorBoundary } from "@/ui/components/shared/error-boundary";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,8 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-900 text-white min-h-screen`}
       >
-        <Navigation />
-        <main>{children}</main>
+        <ErrorBoundary>
+          <Navigation />
+          <main>{children}</main>
+        </ErrorBoundary>
       </body>
     </html>
   );
