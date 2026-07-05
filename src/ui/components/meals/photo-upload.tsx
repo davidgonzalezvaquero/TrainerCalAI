@@ -21,32 +21,37 @@ export function PhotoUpload() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setIsAnalyzing(true);
+    setResult(null);
+
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview(reader.result as string);
+    reader.onloadend = async () => {
+      const dataUrl = reader.result as string;
+      setPreview(dataUrl);
+
+      const base64 = dataUrl.split(',')[1];
+      try {
+        const response = await fetch('/api/nutrition/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: base64,
+            date: new Date().toISOString(),
+            time: new Date().toLocaleTimeString(),
+          }),
+        });
+
+        if (!response.ok) throw new Error(`Analysis failed: ${response.status}`);
+
+        const data = await response.json();
+        setResult(data.meal);
+      } catch (error) {
+        console.error('Analysis error:', error);
+      } finally {
+        setIsAnalyzing(false);
+      }
     };
     reader.readAsDataURL(file);
-
-    setIsAnalyzing(true);
-    try {
-      const base64 = reader.result?.toString().split(',')[1];
-      const response = await fetch('/api/nutrition/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          imageBase64: base64,
-          date: new Date().toISOString(),
-          time: new Date().toLocaleTimeString(),
-        }),
-      });
-
-      const data = await response.json();
-      setResult(data.meal);
-    } catch (error) {
-      console.error('Analysis error:', error);
-    } finally {
-      setIsAnalyzing(false);
-    }
   };
 
   return (
