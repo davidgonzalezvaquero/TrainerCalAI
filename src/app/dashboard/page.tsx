@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDashboardStore } from '@/stores/dashboard-store';
 import { DEV_USER_ID } from '@/lib/constants';
 import { MetricsCard } from '@/ui/components/dashboard/metrics-card';
@@ -11,6 +11,21 @@ import { CalendarWidget } from '@/ui/components/dashboard/calendar-widget';
 export default function DashboardPage() {
   const { selectedDate, setSelectedDate, refreshKey, incrementRefresh } = useDashboardStore();
   const [syncing, setSyncing] = useState({ polar: false, lyfta: false });
+  const [polarData, setPolarData] = useState<{ activity: any; sleep: any } | null>(null);
+  const [lyftaData, setLyftaData] = useState<{ workouts: any[] } | null>(null);
+  const [loadingMetrics, setLoadingMetrics] = useState(true);
+
+  useEffect(() => {
+    if (!selectedDate) return;
+    setLoadingMetrics(true);
+    Promise.all([
+      fetch(`/api/polar/date?date=${selectedDate}`).then(r => r.json()),
+      fetch(`/api/lyfta/date?date=${selectedDate}`).then(r => r.json()),
+    ]).then(([polar, lyfta]) => {
+      setPolarData(polar);
+      setLyftaData(lyfta);
+    }).finally(() => setLoadingMetrics(false));
+  }, [selectedDate, refreshKey]);
 
   const handleSync = async (provider: 'polar' | 'lyfta') => {
     setSyncing(prev => ({ ...prev, [provider]: true }));
@@ -55,10 +70,30 @@ export default function DashboardPage() {
         />
 
         <div className="grid grid-cols-4 gap-4 mt-6">
-          <MetricsCard title="Calorías objetivo" value="1,850" subtitle="Consumidas: 1,420" color="#22c55e" />
-          <MetricsCard title="Calorías quemadas" value="650" subtitle="Ejercicio: 420" color="#3b82f6" />
-          <MetricsCard title="Sueño" value="7.5h" subtitle="Score: 82/100" color="#f59e0b" />
-          <MetricsCard title="HR Promedio" value="68" subtitle="Max: 145 bpm" color="#ec4899" />
+          <MetricsCard
+            title="Calorías quemadas"
+            value={loadingMetrics ? '...' : (polarData?.activity?.calories ?? '—')}
+            subtitle={polarData?.activity ? `${polarData.activity.activeMinutes} min activos` : 'Sin datos'}
+            color="#22c55e"
+          />
+          <MetricsCard
+            title="Sueño"
+            value={loadingMetrics ? '...' : (polarData?.sleep?.duration ? `${(polarData.sleep.duration / 60).toFixed(1)}h` : '—')}
+            subtitle={polarData?.sleep ? `Score: ${polarData.sleep.sleepScore}/100` : 'Sin datos'}
+            color="#f59e0b"
+          />
+          <MetricsCard
+            title="HR Promedio"
+            value={loadingMetrics ? '...' : (polarData?.activity?.heartRate?.average ?? '—')}
+            subtitle={polarData?.activity?.nightlyRecharge ? `Recharge: ${polarData.activity.nightlyRecharge}` : 'Sin datos'}
+            color="#ec4899"
+          />
+          <MetricsCard
+            title="Entrenos Lyfta"
+            value={loadingMetrics ? '...' : (lyftaData?.workouts?.length ?? 0)}
+            subtitle={lyftaData?.workouts?.length ? `${lyftaData.workouts.length} sesión(es)` : 'Sin datos'}
+            color="#3b82f6"
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4 mt-6">
