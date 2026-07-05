@@ -2,12 +2,17 @@
 
 import { useEffect, useState } from 'react';
 
+interface Exercise {
+  id: string;
+  sets: { reps: string; weight: string }[];
+}
+
 interface Workout {
   name: string | null;
   date: string;
   duration: number | null;
   volume: number | null;
-  exercises: number;
+  exercises: Exercise[];
   prs: number;
 }
 
@@ -100,7 +105,7 @@ export function LyftaWidget({ date }: LyftaWidgetProps) {
           <div className="text-sm text-slate-400 mt-1">
             {workout.duration ? `⏱️ ${formatDuration(workout.duration)} • ` : ''}
             {workout.volume ? `🏋️ ${workout.volume.toLocaleString()} kg vol. • ` : ''}
-            📊 {workout.exercises} ejercicios
+            📊 {workout.exercises.length} ejercicios
           </div>
         </div>
         {workout.prs > 0 && (
