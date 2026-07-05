@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/dashboard', label: 'Inicio' },
   { href: '/routines', label: 'Rutinas' },
   { href: '/meals', label: 'Comidas' },
-  { href: '/stats', label: 'Stats' },
-  { href: '/settings', label: 'Settings' },
+  { href: '/stats', label: 'Estadísticas' },
+  { href: '/settings', label: 'Ajustes' },
 ];
 
 export function Navigation() {
