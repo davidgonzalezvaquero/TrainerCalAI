@@ -62,7 +62,7 @@ export default function DashboardPage() {
 
         <div className="grid grid-cols-2 gap-4 mt-6">
           <PolarWidget key={`polar-${refreshKey}`} date={selectedDate} />
-          <LyftaWidget key={`lyfta-${refreshKey}`} />
+          <LyftaWidget key={`lyfta-${refreshKey}`} date={selectedDate} />
         </div>
       </div>
     </div>
