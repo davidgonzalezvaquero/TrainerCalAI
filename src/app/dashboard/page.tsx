@@ -1,66 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDashboardStore } from '@/stores/dashboard-store';
 import { DEV_USER_ID } from '@/lib/constants';
-import { MetricsCard } from '@/ui/components/dashboard/metrics-card';
 import { PolarWidget } from '@/ui/components/dashboard/polar-widget';
 import { LyftaWidget } from '@/ui/components/dashboard/lyfta-widget';
 import { CalendarWidget } from '@/ui/components/dashboard/calendar-widget';
 
-interface PolarActivity {
-  calories: number;
-  activeMinutes: number;
-  heartRate: { average: number };
-  nightlyRecharge: number;
-}
-
-interface PolarSleep {
-  sleepScore: number;
-  duration: number;
-  deepSleep: number;
-  remSleep: number;
-  lightSleep: number;
-}
-
-interface PolarDataState {
-  activity: PolarActivity | null;
-  sleep: PolarSleep | null;
-}
-
-interface LyftaWorkout {
-  id: string;
-  name: string;
-  date: string;
-  duration: number;
-  volume: number;
-  exercises: number;
-  prs: number;
-}
-
-interface LyftaDataState {
-  workouts: LyftaWorkout[];
-}
-
 export default function DashboardPage() {
   const { selectedDate, setSelectedDate, refreshKey, incrementRefresh } = useDashboardStore();
   const [syncing, setSyncing] = useState({ polar: false, lyfta: false });
-  const [polarData, setPolarData] = useState<PolarDataState | null>(null);
-  const [lyftaData, setLyftaData] = useState<LyftaDataState | null>(null);
-  const [loadingMetrics, setLoadingMetrics] = useState(true);
-
-  useEffect(() => {
-    if (!selectedDate) return;
-    setLoadingMetrics(true);
-    const dateStr = selectedDate.toISOString().split('T')[0];
-    Promise.all([
-      fetch(`/api/polar/date?date=${dateStr}`).then(r => r.json()),
-      fetch(`/api/lyfta/date?date=${dateStr}`).then(r => r.json()),
-    ]).then(([polar, lyfta]) => {
-      setPolarData(polar);
-      setLyftaData(lyfta);
-    }).finally(() => setLoadingMetrics(false));
-  }, [selectedDate, refreshKey]);
 
   const handleSync = async (provider: 'polar' | 'lyfta') => {
     setSyncing(prev => ({ ...prev, [provider]: true }));
@@ -103,33 +52,6 @@ export default function DashboardPage() {
           selectedDate={selectedDate}
           onDateSelect={setSelectedDate}
         />
-
-        <div className="grid grid-cols-4 gap-4 mt-6">
-          <MetricsCard
-            title="Calorías quemadas"
-            value={loadingMetrics ? '...' : (polarData?.activity?.calories ?? '—')}
-            subtitle={polarData?.activity ? `${polarData.activity.activeMinutes} min activos` : 'Sin datos'}
-            color="#22c55e"
-          />
-          <MetricsCard
-            title="Sueño"
-            value={loadingMetrics ? '...' : (polarData?.sleep?.duration ? `${(polarData.sleep.duration / 60).toFixed(1)}h` : '—')}
-            subtitle={polarData?.sleep ? `Score: ${polarData.sleep.sleepScore}/100` : 'Sin datos'}
-            color="#f59e0b"
-          />
-          <MetricsCard
-            title="HR Promedio"
-            value={loadingMetrics ? '...' : (polarData?.activity?.heartRate?.average ?? '—')}
-            subtitle={polarData?.activity?.nightlyRecharge ? `Recharge: ${polarData.activity.nightlyRecharge}` : 'Sin datos'}
-            color="#ec4899"
-          />
-          <MetricsCard
-            title="Entrenos Lyfta"
-            value={loadingMetrics ? '...' : (lyftaData?.workouts?.length ?? 0)}
-            subtitle={lyftaData?.workouts?.length ? `${lyftaData.workouts.length} sesión(es)` : 'Sin datos'}
-            color="#3b82f6"
-          />
-        </div>
 
         <div className="grid grid-cols-2 gap-4 mt-6">
           <PolarWidget key={`polar-${refreshKey}`} date={selectedDate} />
