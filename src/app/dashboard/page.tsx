@@ -52,9 +52,10 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!selectedDate) return;
     setLoadingMetrics(true);
+    const dateStr = selectedDate.toISOString().split('T')[0];
     Promise.all([
-      fetch(`/api/polar/date?date=${selectedDate}`).then(r => r.json()),
-      fetch(`/api/lyfta/date?date=${selectedDate}`).then(r => r.json()),
+      fetch(`/api/polar/date?date=${dateStr}`).then(r => r.json()),
+      fetch(`/api/lyfta/date?date=${dateStr}`).then(r => r.json()),
     ]).then(([polar, lyfta]) => {
       setPolarData(polar);
       setLyftaData(lyfta);
