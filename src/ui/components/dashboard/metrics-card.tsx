@@ -5,7 +5,7 @@ interface MetricsCardProps {
   color?: string;
 }
 
-export function MetricsCard({ title, value, subtitle, color = '#22c55e' }: MetricsCardProps) {
+export function MetricCard({ title, value, subtitle, color = '#22c55e' }: MetricsCardProps) {
   return (
     <div className="bg-slate-800 p-4 rounded-lg text-center">
       <div className="text-2xl font-bold" style={{ color }}>
@@ -18,3 +18,5 @@ export function MetricsCard({ title, value, subtitle, color = '#22c55e' }: Metri
     </div>
   );
 }
+
+export const MetricsCard = MetricCard;

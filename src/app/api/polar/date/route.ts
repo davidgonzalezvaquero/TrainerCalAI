@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
             calories: activity.calories,
             activeMinutes: activity.duration ? activity.duration / 60 : 0,
             heartRate: { average: activity.heartRateAvg },
+            nightlyRecharge: activity.nightlyRecharge,
           }
         : null,
       sleep: sleep
