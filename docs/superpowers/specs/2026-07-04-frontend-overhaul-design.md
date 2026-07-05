@@ -89,10 +89,10 @@ Full overhaul of all pages: dashboard, meals, routines, stats, settings. Focus o
 ### 9. Routines Page
 
 **Fix:**
-- Create `/api/routines/chat/route.ts` or wire to existing `/api/routines/generate`
+- Create `/api/routines/chat/route.ts` that wraps the existing `GenerateRoutineUseCase` — accepts a chat message, uses it as the user's workout preferences, returns the generated routine as a chat response
 - Add `userId` to requests
-- Add error feedback in chat UI
-- Show loading indicator while waiting for response
+- Add error feedback in chat UI (show error message below the failed message)
+- Show loading indicator ("Pensando...") while waiting for response
 
 ### 10. Stats Page
 
