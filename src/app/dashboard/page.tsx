@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useDashboardStore } from '@/stores/dashboard-store';
+import { DEV_USER_ID } from '@/lib/constants';
 import { MetricsCard } from '@/ui/components/dashboard/metrics-card';
 import { PolarWidget } from '@/ui/components/dashboard/polar-widget';
 import { LyftaWidget } from '@/ui/components/dashboard/lyfta-widget';
@@ -17,7 +18,7 @@ export default function DashboardPage() {
       await fetch(`/api/${provider}/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: '00000000-0000-0000-0000-000000000001' }),
+        body: JSON.stringify({ userId: DEV_USER_ID }),
       });
       incrementRefresh();
     } finally {

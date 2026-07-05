@@ -115,8 +115,9 @@ export function PolarWidget({ date }: PolarWidgetProps) {
           color="#f97316"
         />
         <MetricCard
-          title="Puntuación de sueño"
-          value={sleep?.sleepScore ?? '-'}
+          title="Eficiencia del sueño"
+          value={sleep?.deepSleep ? `${Math.round(sleep.deepSleep)}%` : '-'}
+          subtitle="Sueño profundo"
           color="#06b6d4"
         />
       </div>

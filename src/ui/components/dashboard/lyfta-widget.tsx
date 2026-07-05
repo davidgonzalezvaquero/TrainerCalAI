@@ -25,27 +25,46 @@ function formatDuration(minutes: number | null): string {
 export function LyftaWidget({ date }: LyftaWidgetProps) {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const fetchData = () => {
-    setLoading(true);
-    const dateStr = date.toISOString().split('T')[0];
-    fetch(`/api/lyfta/date?date=${dateStr}`)
-      .then(res => res.json())
-      .then(data => {
-        setWorkout(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  };
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const dateStr = date.toISOString().split('T')[0];
+        const res = await fetch(`/api/lyfta/date?date=${dateStr}`);
+        
+        if (!res.ok) {
+          throw new Error(`Error fetching Lyfta data: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        setWorkout(data.workouts?.[0] ?? null);
+      } catch (err) {
+        console.error('Failed to fetch Lyfta data:', err);
+        setError(err instanceof Error ? err.message : 'Error al cargar datos de Lyfta');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchData();
   }, [date]);
 
   if (loading) {
     return (
       <div className="bg-slate-800 p-4 rounded-lg">
-        <div className="text-sm text-slate-400">Loading Lyfta data...</div>
+        <div className="text-sm text-slate-400">Cargando datos de Lyfta...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-slate-800 p-4 rounded-lg">
+        <div className="text-sm text-red-400">{error}</div>
       </div>
     );
   }
